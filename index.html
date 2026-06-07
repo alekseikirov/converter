@@ -82,6 +82,32 @@
     font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer;
     white-space: nowrap; flex-shrink: 0;
   }
+  .dismiss-btn {
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    padding: 4px;
+    flex-shrink: 0;
+    line-height: 1;
+    font-size: 18px;
+    opacity: 0.6;
+    transition: opacity 0.1s;
+  }
+  .dismiss-btn:active { opacity: 1; }
+  .install-close {
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    padding: 4px;
+    flex-shrink: 0;
+    line-height: 1;
+    font-size: 18px;
+    opacity: 0.6;
+    transition: opacity 0.1s;
+  }
+  .install-close:active { opacity: 1; }
 
   .fields {
     padding: 0 16px;
@@ -331,6 +357,7 @@
   <div class="install-banner" id="install-banner">
     <p>Добавь на главный экран — будет&nbsp;как&nbsp;приложение</p>
     <button class="install-btn" id="install-btn">Установить</button>
+    <button class="dismiss-btn" id="dismiss-btn" title="Скрыть">×</button>
   </div>
   <p class="footer-note">Сделано для личного использования. Нужен похожий инструмент или&nbsp;хочешь обсудить сотрудничество — <a href="https://t.me/alex_capetown" target="_blank">Напиши&nbsp;в&nbsp;Телеграм</a></p>
 </div>
@@ -487,10 +514,22 @@ async function fetchRates() {
 document.getElementById('refresh-btn').addEventListener('click', fetchRates);
 
 let deferredPrompt = null;
+
+// Показываем баннер только если пользователь не скрыл его
+function showInstallBanner() {
+  if (localStorage.getItem('install_banner_dismissed') === '1') return;
+  document.getElementById('install-banner').classList.add('visible');
+}
+
 window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault();
   deferredPrompt = e;
-  document.getElementById('install-banner').classList.add('visible');
+  showInstallBanner();
+});
+
+document.getElementById('dismiss-btn').addEventListener('click', () => {
+  document.getElementById('install-banner').classList.remove('visible');
+  try { localStorage.setItem('install_banner_dismissed', '1'); } catch {}
 });
 
 document.getElementById('install-btn').addEventListener('click', async () => {
@@ -500,7 +539,10 @@ document.getElementById('install-btn').addEventListener('click', async () => {
   }
   deferredPrompt.prompt();
   const { outcome } = await deferredPrompt.userChoice;
-  if (outcome === 'accepted') document.getElementById('install-banner').classList.remove('visible');
+  if (outcome === 'accepted') {
+    document.getElementById('install-banner').classList.remove('visible');
+    try { localStorage.setItem('install_banner_dismissed', '1'); } catch {}
+  }
   deferredPrompt = null;
 });
 
