@@ -259,7 +259,7 @@
     <span class="flag">🇺🇸</span>
     <div class="field-info">
       <div class="currency-label">USD · Доллар</div>
-      <input type="number" id="input-usd" inputmode="decimal" placeholder="0" min="0" step="any">
+      <input type="text" id="input-usd" inputmode="decimal" placeholder="0">
     </div>
   </div>
 
@@ -267,7 +267,7 @@
     <span class="flag">🇿🇦</span>
     <div class="field-info">
       <div class="currency-label">ZAR · Ранд</div>
-      <input type="number" id="input-zar" inputmode="decimal" placeholder="0" min="0" step="any">
+      <input type="text" id="input-zar" inputmode="decimal" placeholder="0">
     </div>
   </div>
 
@@ -275,7 +275,7 @@
     <span class="flag">🇷🇺</span>
     <div class="field-info">
       <div class="currency-label">RUB · Рубль</div>
-      <input type="number" id="input-rub" inputmode="decimal" placeholder="0" min="0" step="any">
+      <input type="text" id="input-rub" inputmode="decimal" placeholder="0">
     </div>
   </div>
 </div>
@@ -299,14 +299,21 @@ const inputs = {
 
 function fmt(n) {
   if (isNaN(n) || n === null) return '';
-  if (n >= 1000) return parseFloat(n.toFixed(2)).toLocaleString('ru-RU', { maximumFractionDigits: 2 });
-  return parseFloat(n.toFixed(4)).toLocaleString('ru-RU', { maximumFractionDigits: 4 });
+  if (n >= 10000) return n.toFixed(2);
+  if (n >= 1) return n.toFixed(2);
+  return n.toFixed(4);
 }
 
-function convert(source, value) {
+function parseVal(str) {
+  if (!str) return NaN;
+  // accept both comma and dot as decimal separator
+  return parseFloat(str.replace(',', '.').replace(/\s/g, ''));
+}
+
+function convert(source, rawValue) {
   if (!rates) return;
-  const v = parseFloat(value);
-  if (value === '' || isNaN(v) || v < 0) {
+  const v = parseVal(rawValue);
+  if (rawValue === '' || isNaN(v) || v < 0) {
     Object.keys(inputs).forEach(k => { if (k !== source) inputs[k].value = ''; });
     return;
   }
@@ -323,7 +330,7 @@ Object.keys(inputs).forEach(key => {
   inputs[key].addEventListener('input', e => {
     active = key;
     clearTimeout(timer);
-    timer = setTimeout(() => convert(key, e.target.value), 50);
+    timer = setTimeout(() => convert(key, e.target.value), 80);
   });
 });
 
