@@ -42,54 +42,40 @@
     padding: env(safe-area-inset-top, 20px) env(safe-area-inset-right, 0) env(safe-area-inset-bottom, 0) env(safe-area-inset-left, 0);
   }
 
-  /* Header: только Google Finance лейбл */
-  .header {
-    padding: 20px 24px 10px;
-  }
+  .header { padding: 20px 24px 16px; }
 
   .header-label {
     font-size: 11px;
     font-weight: 500;
     color: var(--muted);
     letter-spacing: 0.08em;
-    text-transform: uppercase;
     margin-bottom: 10px;
   }
 
-  .rates-row {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
+  .rates-row { display: flex; gap: 5px; flex-wrap: wrap; }
 
   .chip {
     font-size: 11px;
     color: var(--muted);
     background: var(--surface2);
     border-radius: 100px;
-    padding: 5px 12px;
+    padding: 3px 7px;
     border: 1px solid var(--border);
     white-space: nowrap;
   }
 
-  .divider {
-    height: 1px;
-    background: var(--border);
-    margin: 16px 24px;
-  }
-
   .install-banner {
-    margin: 0 16px 12px;
-    background: linear-gradient(135deg, #1a2a08, #0f1f04);
-    border: 1px solid rgba(200, 241, 53, 0.2);
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 14px 16px;
+    padding: 12px 16px;
+    margin-top: 10px;
     display: none;
     align-items: center;
     gap: 12px;
   }
   .install-banner.visible { display: flex; }
-  .install-banner p { font-size: 13px; color: rgba(200, 241, 53, 0.9); flex: 1; line-height: 1.4; }
+  .install-banner p { font-size: 13px; color: var(--muted); flex: 1; line-height: 1.4; }
   .install-btn {
     background: var(--accent); color: var(--accent-dark);
     border: none; border-radius: 10px; padding: 8px 14px;
@@ -97,7 +83,6 @@
     white-space: nowrap; flex-shrink: 0;
   }
 
-  /* Fields */
   .fields {
     padding: 0 16px;
     display: flex;
@@ -112,7 +97,6 @@
     padding: 16px 16px 14px;
     transition: border-color 0.15s;
   }
-
   .field:focus-within { border-color: var(--accent); }
 
   .field-top {
@@ -124,7 +108,6 @@
   }
 
   .flag { font-size: 24px; line-height: 1; flex-shrink: 0; }
-
   .field-info { flex: 1; min-width: 0; }
 
   .currency-label {
@@ -137,7 +120,7 @@
 
   .field-info input {
     font-size: 32px;
-    font-weight: 300;
+    font-weight: 500;
     color: var(--text);
     background: none;
     border: none;
@@ -150,27 +133,48 @@
   }
   .field-info input::placeholder { color: rgba(255,255,255,0.15); }
 
+  /* Copy icon button */
   .copy-btn {
     background: none;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 6px 12px;
-    font-size: 11px;
+    border: none;
+    padding: 6px;
     color: var(--muted);
-    font-family: inherit;
     cursor: pointer;
-    white-space: nowrap;
     flex-shrink: 0;
     align-self: flex-start;
-    transition: background 0.1s, color 0.1s, border-color 0.1s;
+    border-radius: 6px;
+    position: relative;
+    transition: color 0.1s;
   }
-  .copy-btn:active { background: var(--surface2); color: var(--text); }
-  .copy-btn.copied { border-color: var(--accent); color: var(--accent); }
+  .copy-btn:active { color: var(--text); }
+  .copy-btn svg { display: block; width: 16px; height: 16px; }
 
-  /* Quick amounts inside card */
+  .copy-tooltip {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 11px;
+    color: var(--accent);
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity 0.15s, transform 0.15s;
+  }
+  .copy-btn.copied .copy-tooltip {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .copy-btn.copied svg { color: var(--accent); }
+
+  /* Quick amounts */
   .field-quick {
     display: flex;
-    gap: 6px;
+    gap: 5px;
     padding-top: 12px;
     border-top: 1px solid var(--border);
     flex-wrap: wrap;
@@ -179,7 +183,7 @@
   .quick-btn {
     background: var(--surface2);
     border: 1px solid var(--border);
-    border-radius: 100px;
+    border-radius: 9px;
     padding: 5px 13px;
     font-size: 11px;
     color: var(--muted);
@@ -194,7 +198,6 @@
     border-color: var(--accent);
   }
 
-  /* Desktop */
   @media (min-width: 600px) {
     .fields { flex-direction: row; align-items: flex-start; }
     .field { flex: 1; }
@@ -202,9 +205,8 @@
     .flag { font-size: 28px; }
   }
 
-  /* Bottom */
   .bottom {
-    padding: 16px 16px;
+    padding: 16px;
     padding-bottom: max(16px, env(safe-area-inset-bottom));
     margin-top: auto;
   }
@@ -239,14 +241,7 @@
     opacity: 0.5;
     line-height: 1.5;
   }
-
-  .footer-note a {
-    color: var(--muted);
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-
-  .footer-note a:hover { opacity: 0.8; }
+  .footer-note a { color: var(--muted); text-decoration: underline; text-underline-offset: 2px; }
 
   @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 </style>
@@ -262,13 +257,6 @@
   </div>
 </div>
 
-<div class="divider"></div>
-
-<div class="install-banner" id="install-banner">
-  <p>Добавь на главный экран — будет как приложение</p>
-  <button class="install-btn" id="install-btn">Установить</button>
-</div>
-
 <div class="fields">
 
   <div class="field">
@@ -278,7 +266,10 @@
         <div class="currency-label">USD · Доллар</div>
         <input type="text" id="input-usd" inputmode="decimal" placeholder="0">
       </div>
-      <button class="copy-btn" data-for="input-usd">Скопировать</button>
+      <button class="copy-btn" data-for="input-usd" title="Скопировать">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        <span class="copy-tooltip">Скопировано</span>
+      </button>
     </div>
     <div class="field-quick">
       <button class="quick-btn" data-key="usd" data-val="100">100</button>
@@ -296,7 +287,10 @@
         <div class="currency-label">ZAR · Ранд</div>
         <input type="text" id="input-zar" inputmode="decimal" placeholder="0">
       </div>
-      <button class="copy-btn" data-for="input-zar">Скопировать</button>
+      <button class="copy-btn" data-for="input-zar" title="Скопировать">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        <span class="copy-tooltip">Скопировано</span>
+      </button>
     </div>
     <div class="field-quick">
       <button class="quick-btn" data-key="zar" data-val="100">100</button>
@@ -314,14 +308,16 @@
         <div class="currency-label">RUB · Рубль</div>
         <input type="text" id="input-rub" inputmode="decimal" placeholder="0">
       </div>
-      <button class="copy-btn" data-for="input-rub">Скопировать</button>
+      <button class="copy-btn" data-for="input-rub" title="Скопировать">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        <span class="copy-tooltip">Скопировано</span>
+      </button>
     </div>
     <div class="field-quick">
       <button class="quick-btn" data-key="rub" data-val="1000">1 000</button>
       <button class="quick-btn" data-key="rub" data-val="5000">5 000</button>
       <button class="quick-btn" data-key="rub" data-val="10000">10 000</button>
       <button class="quick-btn" data-key="rub" data-val="50000">50 000</button>
-      <button class="quick-btn" data-key="rub" data-val="100000">100 000</button>
     </div>
   </div>
 
@@ -332,7 +328,11 @@
     <span class="status-dot loading" id="status-dot"></span>
     <span id="refresh-label">Обновляем курс…</span>
   </button>
-  <p class="footer-note">Сделано для личного использования · Нужен похожий инструмент или хочешь обсудить сотрудничество — <a href="https://t.me/aleksei_kirov" target="_blank">напиши в Телеграм</a></p>
+  <div class="install-banner" id="install-banner">
+    <p>Добавь на главный экран — будет&nbsp;как&nbsp;приложение</p>
+    <button class="install-btn" id="install-btn">Установить</button>
+  </div>
+  <p class="footer-note">Сделано для личного использования. Нужен похожий инструмент или&nbsp;хочешь обсудить сотрудничество — <a href="https://t.me/aleksei_kirov" target="_blank">Напиши&nbsp;в&nbsp;Телеграм</a></p>
 </div>
 
 <script>
@@ -345,7 +345,6 @@ const inputs = {
   rub: document.getElementById('input-rub'),
 };
 
-// Форматирование с разрядами: 1 000 000.00
 function fmt(n) {
   if (isNaN(n) || n === null) return '';
   if (n >= 1) {
@@ -358,7 +357,6 @@ function fmt(n) {
 
 function parseVal(str) {
   if (!str) return NaN;
-  // убираем пробелы-разделители тысяч, потом запятую→точку
   return parseFloat(str.replace(/\s/g, '').replace(',', '.'));
 }
 
@@ -376,22 +374,11 @@ function convert(source, rawValue) {
   });
 }
 
-// Форматирование поля ввода с разрядами в реальном времени
 function formatInput(input) {
   const raw = input.value.replace(/\s/g, '');
-  const dotIdx = raw.indexOf('.');
-  const commaIdx = raw.indexOf(',');
-  let intPart, decPart;
-  if (dotIdx !== -1) {
-    intPart = raw.slice(0, dotIdx);
-    decPart = raw.slice(dotIdx);
-  } else if (commaIdx !== -1) {
-    intPart = raw.slice(0, commaIdx);
-    decPart = raw.slice(commaIdx);
-  } else {
-    intPart = raw;
-    decPart = '';
-  }
+  const sepIdx = raw.search(/[.,]/);
+  let intPart = sepIdx !== -1 ? raw.slice(0, sepIdx) : raw;
+  let decPart = sepIdx !== -1 ? raw.slice(sepIdx) : '';
   const formatted = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + decPart;
   if (formatted !== input.value) {
     const pos = input.selectionStart + (formatted.length - input.value.length);
@@ -400,9 +387,9 @@ function formatInput(input) {
   }
 }
 
-function clearQuickBtns() {
-  allQuickBtns.forEach(b => b.classList.remove('sel'));
-}
+const allQuickBtns = document.querySelectorAll('.quick-btn');
+
+function clearQuickBtns() { allQuickBtns.forEach(b => b.classList.remove('sel')); }
 
 Object.keys(inputs).forEach(key => {
   inputs[key].addEventListener('focus', () => active = key);
@@ -417,15 +404,13 @@ Object.keys(inputs).forEach(key => {
     const cleaned = e.target.value.replace(/[^0-9.,]/g, '');
     if (cleaned !== e.target.value) e.target.value = cleaned;
     formatInput(e.target);
-    clearQuickBtns(); // снимаем подсветку при ручном вводе
+    clearQuickBtns();
     active = key;
     clearTimeout(timer);
     timer = setTimeout(() => convert(key, e.target.value), 80);
   });
 });
 
-// Quick amounts — только одна активная кнопка глобально
-const allQuickBtns = document.querySelectorAll('.quick-btn');
 allQuickBtns.forEach(btn => {
   btn.addEventListener('click', e => {
     e.stopPropagation();
@@ -434,24 +419,20 @@ allQuickBtns.forEach(btn => {
     inputs[key].value = fmt(parseFloat(val));
     active = key;
     convert(key, val);
-    allQuickBtns.forEach(b => b.classList.remove('sel'));
+    clearQuickBtns();
     btn.classList.add('sel');
   });
 });
 
-// Copy buttons
+// Copy buttons с тултипом
 document.querySelectorAll('.copy-btn').forEach(btn => {
   btn.addEventListener('click', e => {
     e.stopPropagation();
     const val = document.getElementById(btn.dataset.for).value;
     if (!val) return;
     navigator.clipboard.writeText(val).then(() => {
-      btn.textContent = 'Скопировано';
       btn.classList.add('copied');
-      setTimeout(() => {
-        btn.textContent = 'Скопировать';
-        btn.classList.remove('copied');
-      }, 1500);
+      setTimeout(() => btn.classList.remove('copied'), 1500);
     });
   });
 });
@@ -525,7 +506,7 @@ document.getElementById('install-btn').addEventListener('click', async () => {
 
 if ('serviceWorker' in navigator) {
   const swCode = `
-    const CACHE = 'conv-v3';
+    const CACHE = 'conv-v4';
     self.addEventListener('install', e => {
       e.waitUntil(caches.open(CACHE).then(c => c.addAll([self.location.pathname])));
       self.skipWaiting();
