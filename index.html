@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0f0f0f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Курс">
+<meta name="mobile-web-app-capable" content="yes">
+<title>USD · ZAR · RUB</title>
+<link rel="manifest" href="data:application/json,{%22name%22:%22%D0%9A%D1%83%D1%80%D1%81%20%D0%B2%D0%B0%D0%BB%D1%8E%D1%82%22,%22short_name%22:%22%D0%9A%D1%83%D1%80%D1%81%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22%230f0f0f%22,%22theme_color%22:%22%230f0f0f%22,%22icons%22:[{%22src%22:%22data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20100%20100'%3E%3Crect%20width%3D'100'%20height%3D'100'%20rx%3D'20'%20fill%3D'%230f0f0f'%2F%3E%3Ctext%20y%3D'.9em'%20font-size%3D'80'%20x%3D'10'%3E%F0%9F%92%B1%3C%2Ftext%3E%3C%2Fsvg%3E%22,%22sizes%22:%22192x192%22,%22type%22:%22image/svg+xml%22}]}">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  :root {
+    --bg: #0f0f0f;
+    --surface: #1a1a1a;
+    --surface2: #242424;
+    --border: rgba(255,255,255,0.08);
+    --text: #f0f0f0;
+    --muted: #888;
+    --accent: #c8f135;
+    --accent-dark: #0f0f0f;
+    --radius: 18px;
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+    overscroll-behavior: none;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+    padding: env(safe-area-inset-top, 20px) env(safe-area-inset-right, 0) env(safe-area-inset-bottom, 0) env(safe-area-inset-left, 0);
+  }
+
+  .header {
+    padding: 20px 24px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .header h1 {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .update-time {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .rates-row {
+    display: flex;
+    gap: 8px;
+    padding: 0 24px 20px;
+    flex-wrap: wrap;
+  }
+
+  .chip {
+    font-size: 11px;
+    color: var(--muted);
+    background: var(--surface2);
+    border-radius: 100px;
+    padding: 5px 12px;
+    border: 1px solid var(--border);
+    white-space: nowrap;
+  }
+
+  .fields {
+    flex: 1;
+    padding: 0 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .field {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    transition: border-color 0.15s;
+    cursor: text;
+  }
+
+  .field:focus-within {
+    border-color: var(--accent);
+  }
+
+  .flag {
+    font-size: 28px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .field-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .currency-label {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .field-info input {
+    font-size: 28px;
+    font-weight: 300;
+    color: var(--text);
+    background: none;
+    border: none;
+    outline: none;
+    width: 100%;
+    font-family: inherit;
+    letter-spacing: -0.5px;
+    caret-color: var(--accent);
+  }
+
+  .field-info input::placeholder {
+    color: rgba(255,255,255,0.15);
+  }
+
+  .field-info input::-webkit-outer-spin-button,
+  .field-info input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }
+
+  .bottom {
+    padding: 20px 16px;
+    padding-bottom: max(20px, env(safe-area-inset-bottom));
+  }
+
+  .refresh-btn {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px;
+    color: var(--muted);
+    font-size: 14px;
+    font-family: inherit;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .refresh-btn:active {
+    background: var(--surface);
+    color: var(--text);
+  }
+
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .status-dot.loading {
+    background: var(--muted);
+    animation: pulse 1s infinite;
+  }
+
+  .status-dot.error {
+    background: #ff5c5c;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .install-banner {
+    margin: 0 16px 12px;
+    background: linear-gradient(135deg, #1a2a08, #0f1f04);
+    border: 1px solid rgba(200, 241, 53, 0.2);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    display: none;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .install-banner.visible {
+    display: flex;
+  }
+
+  .install-banner p {
+    font-size: 13px;
+    color: rgba(200, 241, 53, 0.9);
+    flex: 1;
+    line-height: 1.4;
+  }
+
+  .install-btn {
+    background: var(--accent);
+    color: var(--accent-dark);
+    border: none;
+    border-radius: 10px;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 0 24px 20px;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Конвертер</h1>
+  <span class="update-time" id="update-time">—</span>
+</div>
+
+<div class="rates-row" id="rates-row">
+  <span class="chip" id="chip-usd-zar">загрузка…</span>
+  <span class="chip" id="chip-usd-rub">—</span>
+  <span class="chip" id="chip-zar-rub">—</span>
+</div>
+
+<div class="divider"></div>
+
+<div class="install-banner" id="install-banner">
+  <p>Добавь на главный экран — будет как приложение</p>
+  <button class="install-btn" id="install-btn">Установить</button>
+</div>
+
+<div class="fields">
+  <div class="field" onclick="document.getElementById('input-usd').focus()">
+    <span class="flag">🇺🇸</span>
+    <div class="field-info">
+      <div class="currency-label">USD · Доллар</div>
+      <input type="number" id="input-usd" inputmode="decimal" placeholder="0" min="0" step="any">
+    </div>
+  </div>
+
+  <div class="field" onclick="document.getElementById('input-zar').focus()">
+    <span class="flag">🇿🇦</span>
+    <div class="field-info">
+      <div class="currency-label">ZAR · Ранд</div>
+      <input type="number" id="input-zar" inputmode="decimal" placeholder="0" min="0" step="any">
+    </div>
+  </div>
+
+  <div class="field" onclick="document.getElementById('input-rub').focus()">
+    <span class="flag">🇷🇺</span>
+    <div class="field-info">
+      <div class="currency-label">RUB · Рубль</div>
+      <input type="number" id="input-rub" inputmode="decimal" placeholder="0" min="0" step="any">
+    </div>
+  </div>
+</div>
+
+<div class="bottom">
+  <button class="refresh-btn" id="refresh-btn">
+    <span class="status-dot loading" id="status-dot"></span>
+    <span id="refresh-label">Обновляем курс…</span>
+  </button>
+</div>
+
+<script>
+let rates = null;
+let active = null;
+
+const inputs = {
+  usd: document.getElementById('input-usd'),
+  zar: document.getElementById('input-zar'),
+  rub: document.getElementById('input-rub'),
+};
+
+function fmt(n) {
+  if (isNaN(n) || n === null) return '';
+  if (n >= 1000) return parseFloat(n.toFixed(2)).toLocaleString('ru-RU', { maximumFractionDigits: 2 });
+  return parseFloat(n.toFixed(4)).toLocaleString('ru-RU', { maximumFractionDigits: 4 });
+}
+
+function convert(source, value) {
+  if (!rates) return;
+  const v = parseFloat(value);
+  if (value === '' || isNaN(v) || v < 0) {
+    Object.keys(inputs).forEach(k => { if (k !== source) inputs[k].value = ''; });
+    return;
+  }
+  const usd = source === 'usd' ? v : source === 'zar' ? v / rates.zar : v / rates.rub;
+  Object.keys(inputs).forEach(k => {
+    if (k === source) return;
+    inputs[k].value = fmt(k === 'usd' ? usd : k === 'zar' ? usd * rates.zar : usd * rates.rub);
+  });
+}
+
+Object.keys(inputs).forEach(key => {
+  inputs[key].addEventListener('focus', () => active = key);
+  let timer;
+  inputs[key].addEventListener('input', e => {
+    active = key;
+    clearTimeout(timer);
+    timer = setTimeout(() => convert(key, e.target.value), 50);
+  });
+});
+
+const dot = document.getElementById('status-dot');
+const label = document.getElementById('refresh-label');
+const timeEl = document.getElementById('update-time');
+
+async function fetchRates() {
+  dot.className = 'status-dot loading';
+  label.textContent = 'Обновляем…';
+  try {
+    const CORS_PROXIES = [
+      'https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.min.json',
+      'https://latest.currency-api.pages.dev/v1/currencies/usd.min.json',
+    ];
+    let data = null;
+    for (const url of CORS_PROXIES) {
+      try {
+        const r = await fetch(url);
+        if (r.ok) { data = await r.json(); break; }
+      } catch {}
+    }
+    if (!data) throw new Error('no data');
+    rates = { zar: data.usd.zar, rub: data.usd.rub };
+
+    document.getElementById('chip-usd-zar').textContent = '1 USD = ' + fmt(rates.zar) + ' ZAR';
+    document.getElementById('chip-usd-rub').textContent = '1 USD = ' + fmt(rates.rub) + ' RUB';
+    document.getElementById('chip-zar-rub').textContent = '1 ZAR = ' + fmt(rates.rub / rates.zar) + ' RUB';
+
+    const now = new Date();
+    timeEl.textContent = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+
+    dot.className = 'status-dot';
+    label.textContent = 'Курс актуален · нажми для обновления';
+
+    // save cache
+    try { localStorage.setItem('rates_cache', JSON.stringify({ rates, ts: Date.now() })); } catch {}
+
+    if (active && inputs[active].value) convert(active, inputs[active].value);
+  } catch {
+    dot.className = 'status-dot error';
+    label.textContent = 'Ошибка загрузки · нажми повторить';
+    // try cache
+    try {
+      const c = JSON.parse(localStorage.getItem('rates_cache'));
+      if (c && c.rates) {
+        rates = c.rates;
+        const d = new Date(c.ts);
+        timeEl.textContent = 'кэш ' + d.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' });
+        document.getElementById('chip-usd-zar').textContent = '1 USD = ' + fmt(rates.zar) + ' ZAR';
+        document.getElementById('chip-usd-rub').textContent = '1 USD = ' + fmt(rates.rub) + ' RUB';
+        document.getElementById('chip-zar-rub').textContent = '1 ZAR = ' + fmt(rates.rub / rates.zar) + ' RUB';
+      }
+    } catch {}
+  }
+}
+
+document.getElementById('refresh-btn').addEventListener('click', fetchRates);
+
+// PWA install
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('install-banner').classList.add('visible');
+});
+
+document.getElementById('install-btn').addEventListener('click', async () => {
+  if (!deferredPrompt) {
+    alert('Чтобы установить:\n\nSafari → кнопка «Поделиться» → «На экран «Домой»»\n\nChrome → меню ⋮ → «Установить приложение»');
+    return;
+  }
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  if (outcome === 'accepted') document.getElementById('install-banner').classList.remove('visible');
+  deferredPrompt = null;
+});
+
+// Service worker для офлайн
+if ('serviceWorker' in navigator) {
+  const swCode = `
+    const CACHE = 'conv-v1';
+    self.addEventListener('install', e => {
+      e.waitUntil(caches.open(CACHE).then(c => c.addAll([self.location.pathname])));
+      self.skipWaiting();
+    });
+    self.addEventListener('fetch', e => {
+      if (e.request.url.includes('currency-api') || e.request.url.includes('jsdelivr')) return;
+      e.respondWith(caches.match(e.request).then(r => r || fetch(e.request)));
+    });
+  `;
+  const blob = new Blob([swCode], { type: 'application/javascript' });
+  const swUrl = URL.createObjectURL(blob);
+  navigator.serviceWorker.register(swUrl).catch(() => {});
+}
+
+fetchRates();
+</script>
+</body>
+</html>
